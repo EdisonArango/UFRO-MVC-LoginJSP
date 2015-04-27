@@ -5,6 +5,8 @@
  */
 package model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author edisonarango
@@ -47,16 +49,24 @@ public class ModelLoginBean {
         if (conexion.conectar()) {
             int tipoUsuario = conexion.usuario(usuario, password);
             if (tipoUsuario!=-1) {
-                sesion.usuarioLogueado(usuario,tipoUsuario);
+                sesion.usuarioLogueado(new Usuario(usuario,tipoUsuario));
+                conexion.desconectar();
                 return true;
             }
             else{
+                conexion.desconectar();
                 return false;
             }
         }
         else{
+            conexion.desconectar();
             return false;    
         }
+    }
+    
+    public ArrayList<Usuario> obtenerUsuarios(){
+        conexion.conectar();
+        return conexion.obtenerUsuarios();
     }
     
 }

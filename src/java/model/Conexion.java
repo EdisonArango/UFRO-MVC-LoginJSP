@@ -16,6 +16,7 @@
 package model;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Clase de prueba de conexión con una base de datos MySQL
@@ -100,6 +101,54 @@ public class Conexion {
         catch (Exception e)
         {
             e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Usuario> obtenerUsuarios() {
+        try
+        {
+            // Se crea un Statement, para realizar la consulta
+            Statement s = conexion.createStatement();
+            
+            // Se realiza la consulta. Los resultados se guardan en el 
+            // ResultSet rs
+            ResultSet rs = s.executeQuery ("select * from usuario;");
+            
+            //rs.first();
+            ArrayList<Usuario> usuarios = new ArrayList();
+            // Se recorre el ResultSet, mostrando por pantalla los resultados.
+            while (rs.next())
+            {
+                usuarios.add(new Usuario(rs.getString("usuario"),rs.getInt("tipousuario")));
+            }
+            return usuarios;
+            
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return new ArrayList<Usuario>();
+        }
+    }
+
+    public boolean modificarUsuario(String usuario, String nuevousuario, String nuevaclave, String nuevotipo) {
+        
+        try {
+            Statement s = conexion.createStatement();
+            s.execute("update usuario set usuario='"+nuevousuario+"',clave='"+nuevaclave+"',tipousuario='"+nuevotipo+"' where usuario='"+usuario+"'");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    public boolean eliminarUsuario (String usuario){
+        try {
+            Statement s = conexion.createStatement();
+            s.execute("delete from usuario where usuario='"+usuario+"'");
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
     

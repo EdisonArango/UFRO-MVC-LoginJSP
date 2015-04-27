@@ -28,10 +28,10 @@ public class Sesion {
     }
     
     
-    public void usuarioLogueado(String usuario,int tipoUsuario){
+    public void usuarioLogueado(Usuario usuario){
         sesionIniciada = true;
-        usuarioEnSesion = usuario;
-        this.tipoUsuario = tipoUsuario;
+        usuarioEnSesion = usuario.getUsuario();
+        this.tipoUsuario = usuario.getTipoUsuario();
     }
     
     public void sesionFinalizada (){

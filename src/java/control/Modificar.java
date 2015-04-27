@@ -7,23 +7,19 @@ package control;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.ModelLoginBean;
-import model.Usuario;
+import model.Conexion;
 
 /**
  *
  * @author edisonarango
  */
-@WebServlet(name = "ControlServlet", urlPatterns = {"/ControlServlet"})
-public class ControlServlet extends HttpServlet {
-    
+@WebServlet(name = "Modificar", urlPatterns = {"/Modificar"})
+public class Modificar extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,44 +28,41 @@ public class ControlServlet extends HttpServlet {
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
-     * @throws java.io.IOException
+     * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException{
-        response.setContentType("text/html");
+            throws ServletException, IOException {
         
-        String usuario = request.getParameter("usuario");
-        String password = request.getParameter("password");
-        
-        ModelLoginBean mlbean = new ModelLoginBean();
-        mlbean.setUsuario(usuario);
-        mlbean.setPassword(password);
-        
-        boolean status = mlbean.validate();
-        
-        RequestDispatcher rd;
-        if (status) {
-            request.setAttribute("sesion", mlbean.getSesion());
-            if (mlbean.getSesion().getTipoUsuario()==1) {
-                rd = request.getRequestDispatcher("/vista/login-ok.jsp");
-            }
-            else if (mlbean.getSesion().getTipoUsuario()==0){
-                ArrayList<Usuario> usuarios = mlbean.obtenerUsuarios();
-                request.setAttribute("usuarios", usuarios);
-                rd = request.getRequestDispatcher("/vista/login-admin.jsp");
+        String tipo = request.getParameter("tipomodificacion");
+        Conexion conexion = new Conexion ();
+         conexion.conectar();
+         String mensaje = "";
+        if (tipo.equals("modificar")) {
+            boolean accion = conexion.modificarUsuario(request.getParameter("usuario"),request.getParameter("nuevousuario"),request.getParameter("clave"),request.getParameter("tipo"));
+            if (accion) {
+                mensaje ="El usuario se ha modificado con éxito";
             }
             else{
-                request.setAttribute("mensaje", "Error!! Usuario o contraseña incorrecta");
-                rd = request.getRequestDispatcher("/vista/login-form.jsp");
+                mensaje ="Error en la modificación de usuario";
             }
-            
+
         }
-        else{
-            request.setAttribute("mensaje", "Error!! Usuario o contraseña incorrecta");
-            rd = request.getRequestDispatcher("/vista/login-form.jsp");
+        else if (tipo.equals("eliminar")) {
+            boolean accion = conexion.eliminarUsuario(request.getParameter("usuario"));
+            if (accion) {
+                mensaje ="El usuario se ha eliminado con éxito";
+            }
+            else{
+                mensaje ="Error en la eliminación de usuario";
+            }
         }
-        rd.forward(request, response);
+        conexion.desconectar();
         
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+            out.println("<script type=\"text/javascript\">");
+            out.println("alert('"+mensaje+"');");
+            out.println("</script>");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
