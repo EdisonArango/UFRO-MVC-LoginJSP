@@ -64,7 +64,7 @@ public class Conexion {
         }
     }
     
-    public boolean usuarioExiste (String usuario,String contraseña){
+    public int usuario (String usuario,String contraseña){
         try
         {
             // Se crea un Statement, para realizar la consulta
@@ -72,10 +72,10 @@ public class Conexion {
             
             // Se realiza la consulta. Los resultados se guardan en el 
             // ResultSet rs
-            ResultSet rs = s.executeQuery ("select * from usuarios where usuario='"+usuario+"' and clave='"+contraseña+"';");
+            ResultSet rs = s.executeQuery ("select * from usuario where usuario='"+usuario+"' and clave='"+contraseña+"';");
             
             rs.first();
-            return rs.getString("usuario").equals(usuario);
+            return rs.getInt("tipousuario");
             // Se recorre el ResultSet, mostrando por pantalla los resultados.
 //            while (rs.next())
 //            {
@@ -87,7 +87,7 @@ public class Conexion {
         catch (Exception e)
         {
             e.printStackTrace();
-            return false;
+            return -1;
         }
     }
     

@@ -13,6 +13,7 @@ public class Sesion {
     
     private boolean sesionIniciada;
     private String usuarioEnSesion;
+    private int tipoUsuario;
     
     public Sesion (){
         sesionIniciada = false;
@@ -27,13 +28,24 @@ public class Sesion {
     }
     
     
-    public void usuarioLogueado(String usuario){
+    public void usuarioLogueado(String usuario,int tipoUsuario){
         sesionIniciada = true;
         usuarioEnSesion = usuario;
+        this.tipoUsuario = tipoUsuario;
     }
     
     public void sesionFinalizada (){
         sesionIniciada = false;
         usuarioEnSesion = "";
     }
+
+    public int getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(int tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
+    }
+    
+    
 }

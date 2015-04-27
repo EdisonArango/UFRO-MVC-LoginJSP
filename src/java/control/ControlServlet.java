@@ -48,7 +48,17 @@ public class ControlServlet extends HttpServlet {
         RequestDispatcher rd;
         if (status) {
             request.setAttribute("sesion", mlbean.getSesion());
-            rd = request.getRequestDispatcher("/vista/login-ok.jsp");
+            if (mlbean.getSesion().getTipoUsuario()==1) {
+                rd = request.getRequestDispatcher("/vista/login-ok.jsp");
+            }
+            else if (mlbean.getSesion().getTipoUsuario()==0){
+                rd = request.getRequestDispatcher("/vista/login-admin.jsp");
+            }
+            else{
+                request.setAttribute("mensaje", "Error!! Usuario o contraseña incorrecta");
+                rd = request.getRequestDispatcher("/vista/login-form.jsp");
+            }
+            
         }
         else{
             request.setAttribute("mensaje", "Error!! Usuario o contraseña incorrecta");

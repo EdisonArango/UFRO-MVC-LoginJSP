@@ -45,8 +45,9 @@ public class ModelLoginBean {
     public boolean validate () {
         
         if (conexion.conectar()) {
-            if (conexion.usuarioExiste(usuario, password)) {
-                sesion.usuarioLogueado(usuario);
+            int tipoUsuario = conexion.usuario(usuario, password);
+            if (tipoUsuario!=-1) {
+                sesion.usuarioLogueado(usuario,tipoUsuario);
                 return true;
             }
             else{
@@ -55,7 +56,7 @@ public class ModelLoginBean {
         }
         else{
             return false;    
-        }   
+        }
     }
     
 }
